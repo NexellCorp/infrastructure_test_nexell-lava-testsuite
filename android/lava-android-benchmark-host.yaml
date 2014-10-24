@@ -28,14 +28,7 @@ params:
 
 run:
     steps:
-        - apt-add-repository -y http://ppa.launchpad.net/nilarimogard/webupd8/ubuntu
-        - apt-get update -y
-        - apt-get install -y android-tools-adb android-tools-fastboot $JAVA_PACKAGE
-        - lava-wait $TEST_NAME-send-ip
-        - IPADDR=`awk -F '=' '{print $2}' /tmp/lava_multi_node_cache.txt`
-        - adb connect $IPADDR
-        - adb wait-for-device
-        - cd android-apk-automation/$TEST_NAME
+        - cd $TEST_NAME
         - for (( LOOP=1; LOOP<=$ITERATIONS; LOOP++ )); do lava-test-case $TEST_NAME-execution-$LOOP --shell ./execute.sh $IPADDR:5555; done;
         - lava-test-run-attach logcat_canvas.log text/plain
         - lava-test-run-attach logcat.log text/plain
