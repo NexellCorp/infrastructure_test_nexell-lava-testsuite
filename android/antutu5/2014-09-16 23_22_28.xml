@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scores>
+<item>
+<memory>1894</memory>
+<integer>1685</integer>
+<float>2120</float>
+<score2d>944</score2d>
+<score3d>2525</score3d>
+<database>630</database>
+<sram>716</sram>
+<svm>1281</svm>
+<srs>0</srs>
+<smt>3846</smt>
+<snand>780</snand>
+<ints>1085</ints>
+<floats>1233</floats>
+<score>18739</score>
+<date>2014-09-16 23:21</date>
+<cpu>1400 MHz (x4)</cpu>
+<model>AOSP on pyxis</model>
+<version>4.4.2</version>
+<hash>6ccac635870841bab94dd70d01b6cc86cb6b422d</hash>
+</item>
+</scores>
