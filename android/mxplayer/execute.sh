@@ -3,7 +3,7 @@
 # need to be defined for different apks
 activity="com.mxtech.videoplayer.ad/.ActivityMediaList"
 #activity="com.android.camera2"
-apk_file_name="com.mxtech.videoplayer.ad"
+apk_file_name="MX_Player_Pro_v1_7_31_apkgalaxy_com.apk"
 
 # The first added parameter has been reserved by Android View Client.
 # In order to add customised parameter, the first one must be the serial number from ADB

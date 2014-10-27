@@ -1,7 +1,9 @@
 #!/bin/bash
 
+# psw0523 fix for android test apks nexell repository
 #base_url="ssh://linaro-lava@linaro-private.git.linaro.org/srv/linaro-private.git.linaro.org/qa/benchmark-apks.git"
-base_url="http://people.linaro.org/~milosz.wasilewski/apks/"
+#base_url="http://people.linaro.org/~milosz.wasilewski/apks/"
+base_url="http://git.nexell.co.kr:8081/nexell/infrastructure/android-apks"
 png_dir_device="/data/local/tmp/"
 storage_dir="/storage/sdcard0"
 post_install=""
@@ -45,18 +47,18 @@ function pull_png_files_from_device(){
 function init(){
     # uninstall the apk application
     # don't uninstall if apk file name is empty
-#    if [ ! -z "$apk_file_name" ]; then
-#        echo "trying to unistall ${apk_package}"
-#        adb uninstall "${apk_package}"
-#        echo "unistalled ${apk_package}"
-#    fi
+    if [ ! -z "$apk_file_name" ]; then
+        echo "trying to unistall ${apk_package}"
+        adb uninstall "${apk_package}"
+        echo "unistalled ${apk_package}"
+    fi
 
     # Make Result Directory
-#    test_time=`adb shell "date +%Y%m%d%H%M"`
-#    adb shell "mkdir $storage_dir/result_$test_time"
-#    RESULT_DIR=$storage_dir/result_$test_time
-#    echo "result dir : $RESULT_DIR"
-#    export $RESULT_DIR
+    test_time=`adb shell "date +%Y%m%d%H%M"`
+    adb shell "mkdir $storage_dir/result_$test_time"
+    RESULT_DIR=$storage_dir/result_$test_time
+    echo "result dir : $RESULT_DIR"
+    export $RESULT_DIR
 
     # clear the logcat information
     adb logcat -c
@@ -65,29 +67,28 @@ function init(){
     rm -fr "${parent_dir}"/*.png 2>/dev/null
     delete_png_files_on_device "${png_dir_device}"
 
-##    disableRotationapk="${APKS_DIR}/RotationOff.apk"
-##    if [ -f "{$disableRotationapk}" ]; then
-##        echo "The file(${disableRotationapk}) already exists."
-###    else
-###        get_file_with_base_url "RotationOff.apk"
-##    fi
-##    adb shell pm list packages | grep rotation.off
-##    if [ $? -ne 0 ]; then
-##        echo "Install : ${disableRotationapk}"
-##        adb install "${disableRotationapk}"
-##    fi
-##    sleep 2
-##    adb shell am start 'rotation.off/.RotationOff'
-##    sleep 2
+    disableRotationapk="${APKS_DIR}/RotationOff.apk"
+    if [ -f "{$disableRotationapk}" ]; then
+        echo "The file(${disableRotationapk}) already exists."
+    else
+        get_file_with_base_url "RotationOff.apk"
+    fi
+    adb shell pm list packages | grep rotation.off
+    if [ $? -ne 0 ]; then
+        echo "Install : ${disableRotationapk}"
+        adb install "${disableRotationapk}"
+    fi
+    sleep 2
+    adb shell am start 'rotation.off/.RotationOff'
+    sleep 2
 
     adb shell "cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor > /data/governor.txt"
-#    adb shell "cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor > /storage/sdcard0/governor.txt"
     adb shell "echo performance > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
     adb shell "echo performance > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor"
     adb shell logcat -c
     adb shell setprop ro.debug.drawtext true
     adb shell setprop ro.debug.textview true
-#    adb shell setprop ro.debug.loadDataWithBaseURL true
+    adb shell setprop ro.debug.loadDataWithBaseURL true
     logcat_file="${parent_dir}/logcat.log"
     echo "---------------------------------------------------"
     echo "A new test is started : `date`" |tee -a "${logcat_file}"
@@ -106,8 +107,8 @@ function cleanup(){
 #    adb shell rm /storage/sdcard0/governor.txt
     adb shell setprop ro.debug.drawtext false
     adb shell setprop ro.debug.textview false
-#    adb shell setprop ro.debug.loadDataWithBaseURL false
-#    adb uninstall rotation.off
+    adb shell setprop ro.debug.loadDataWithBaseURL false
+    adb uninstall rotation.off
     if [ -n "${LOGCAT_PID}" ]; then
         echo "Killed : ${LOGCAT_PID}"
         kill -9 ${LOGCAT_PID}
@@ -134,11 +135,11 @@ function export_serial(){
 
 function export_parent_dir(){
     old_pwd=`pwd`
-#    echo 'old_pwd : ' $old_pwd
+    echo 'old_pwd : ' $old_pwd
     cd ${parent_dir}
 #    echo 'cd ${parent_dir} : ' ${parent_dir}
     parent_dir=`pwd`
-#    echo 'parent_dir : ' $parent_dir
+    echo 'parent_dir : ' $parent_dir
     cd ${old_pwd}
     export parent_dir=${parent_dir}
 #    echo 'export parent_dir :' ${parent_dir}
@@ -147,94 +148,94 @@ function export_parent_dir(){
 function export_apks_dir(){
 #    export APKS_DIR="${parent_dir}/../benchmark-apks"
     export APKS_DIR="${parent_dir}"
-#    export APKS_DIR="${parent_dir}/../common"
     echo 'APKS_DIR :' "${APKS_DIR}"
 }
 
-##function get_file_with_base_url(){
-##    file_name="${1}" && shift
-##
-##    if [ -z "${file_name}" ]; then
-##        echo "File name must be passed!"
-##        exit 1
-##    fi
-##
-##    if [ -f "${APKS_DIR}/${file_name}" ]; then
-##        echo "The file(${APKS_DIR}/${file_name}) already exists."
-##        return
-##    fi
-##    if [[ "${base_url}" =~ "scp://" ]]; then
-##        mkdir -p "${APKS_DIR}"
-##        apk_url="${base_url}/${file_name}"
-##        url_no_scp=`echo ${apk_url}|sed 's/^\s*scp\:\/\///'|sed 's/\//\:\//'`
-##        scp "${url_no_scp}" "${APKS_DIR}/${file_name}"
-##        if [ $? -ne 0 ]; then
-##            echo "Failed to get the apk(${file_name}) with ${base_url}"
-##            exit 1
-##        fi
-##    elif [[ "${base_url}" =~ "ssh://" ]]; then
-##        rm -fr "${APKS_DIR}"
-##        git clone "${base_url}" "${APKS_DIR}"
-##        if [ $? -ne 0 ]; then
-##            echo "Failed to get the apks with ${base_url}"
-##            exit 1
-##        fi
-##    elif [[ "${base_url}" =~ "http://" ]]; then
-##        mkdir -p "${APKS_DIR}"
-##        wget "${base_url}"/${file_name} -O "${APKS_DIR}"/${file_name}
-##        if [ $? -ne 0 ]; then
-##            echo "Failed to get the apks with ${base_url}"
-##            exit 1
-##        fi
-##    else
-##        echo "Failed to get the file($file_name)."
-##        echo "The schema of the ${base_url} is not supported now!"
-##        exit 1
-##    fi
-##}
+function get_file_with_base_url(){
+    file_name="${1}" && shift
 
-##function install_run_uninstall(){
-##    #install the apk files
-##    if [ ! -z "$apk_file_name" ]; then
-##        apk_file="${APKS_DIR}/${apk_file_name}"
-##        adb install "${apk_file}"
-##        if [ $? -ne 0 ]; then
-##            echo "Failed to install ${apk_file}."
-##            exit 1
-##        fi
-##    else
-##        # force stop activity if apk is already installed
-##        echo "stopping ${apk_package}"
-##        adb shell am force-stop "${apk_package}"
-##        sleep 5
-##    fi
-##    if [ -n "${post_install}" ]; then
-##        ${post_install}
-##    fi
-##    adb shell am start "${activity}"
-##    sleep 5
-##    adb shell am kill-all
-##    sleep 5
-##    streamline_init_capture
-##    if [ -n "${test_method}" ]; then
-##        timeout ${timeout} ${test_method}
-##        ret_value=$?
-##    fi
-##    sleep 5
-##    streamline_end_capture
-##    if [ -n "${pre_uninstall}" ]; then
-##        ${pre_uninstall}
-##    fi
-##
-##    if [ ! -z "$apk_file_name" ]; then
-##        adb uninstall "${apk_package}"
-##    else
-##        # force stop activity if apk is a stock app
-##        echo "stopping ${apk_package}"
-##        adb shell am force-stop "${apk_package}"
-##        sleep 5
-##    fi
-##}
+    if [ -z "${file_name}" ]; then
+        echo "File name must be passed!"
+        exit 1
+    fi
+
+    if [ -f "${APKS_DIR}/${file_name}" ]; then
+        echo "The file(${APKS_DIR}/${file_name}) already exists."
+        return
+    fi
+    if [[ "${base_url}" =~ "scp://" ]]; then
+        mkdir -p "${APKS_DIR}"
+        apk_url="${base_url}/${file_name}"
+        url_no_scp=`echo ${apk_url}|sed 's/^\s*scp\:\/\///'|sed 's/\//\:\//'`
+        scp "${url_no_scp}" "${APKS_DIR}/${file_name}"
+        if [ $? -ne 0 ]; then
+            echo "Failed to get the apk(${file_name}) with ${base_url}"
+            exit 1
+        fi
+    elif [[ "${base_url}" =~ "ssh://" ]]; then
+        rm -fr "${APKS_DIR}"
+        git clone "${base_url}" "${APKS_DIR}"
+        if [ $? -ne 0 ]; then
+            echo "Failed to get the apks with ${base_url}"
+            exit 1
+        fi
+    elif [[ "${base_url}" =~ "http://" ]]; then
+        mkdir -p "${APKS_DIR}"
+        git clone "${base_url}" "${APKS_DIR}"
+        #wget "${base_url}"/${file_name} -O "${APKS_DIR}"/${file_name}
+        if [ $? -ne 0 ]; then
+            echo "Failed to get the apks with ${base_url}"
+            exit 1
+        fi
+    else
+        echo "Failed to get the file($file_name)."
+        echo "The schema of the ${base_url} is not supported now!"
+        exit 1
+    fi
+}
+
+function install_run_uninstall(){
+    #install the apk files
+    if [ ! -z "$apk_file_name" ]; then
+        apk_file="${APKS_DIR}/${apk_file_name}"
+        adb install "${apk_file}"
+        if [ $? -ne 0 ]; then
+            echo "Failed to install ${apk_file}."
+            exit 1
+        fi
+    else
+        # force stop activity if apk is already installed
+        echo "stopping ${apk_package}"
+        adb shell am force-stop "${apk_package}"
+        sleep 5
+    fi
+    if [ -n "${post_install}" ]; then
+        ${post_install}
+    fi
+    adb shell am start "${activity}"
+    sleep 5
+    adb shell am kill-all
+    sleep 5
+    streamline_init_capture
+    if [ -n "${test_method}" ]; then
+        timeout ${timeout} ${test_method}
+        ret_value=$?
+    fi
+    sleep 5
+    streamline_end_capture
+    if [ -n "${pre_uninstall}" ]; then
+        ${pre_uninstall}
+    fi
+
+    if [ ! -z "$apk_file_name" ]; then
+        adb uninstall "${apk_package}"
+    else
+        # force stop activity if apk is a stock app
+        echo "stopping ${apk_package}"
+        adb shell am force-stop "${apk_package}"
+        sleep 5
+    fi
+}
 
 function my_run() {
 	echo "In my_run function"
@@ -265,8 +266,8 @@ function collect_log(){
     sleep 5
     adb logcat -d -s "Canvas" >${parent_dir}/logcat_canvas.log
     sleep 5
-#    adb logcat -d -s "WebViewClassic.loadDataWithBaseURL" >${parent_dir}/logcat_webview.log
-#    sleep 5
+    adb logcat -d -s "WebViewClassic.loadDataWithBaseURL" >${parent_dir}/logcat_webview.log
+    sleep 5
 }
 
 function streamline_locate(){
@@ -384,22 +385,23 @@ function main(){
 	export_parent_dir
 	export_apks_dir
 	init
-#    echo "init done"
-##    if [ ! -z "$apk_file_name" ]; then
-##        get_file_with_base_url "${apk_file_name}"
-##    fi
-##    install_run_uninstall
+    echo "init done"
+    if [ ! -z "$apk_file_name" ]; then
+        get_file_with_base_url "${apk_file_name}"
+    fi
+    install_run_uninstall
+    echo "testing done"
 
-	my_run
-    echo "After my_run function"
+	#my_run
+    #echo "After my_run function"
     pull_png_files_from_device "${png_dir_device}" ${parent_dir}
    	collect_log
-	if [ ${ret_value} -ne 0 ]; then
-        echo "${apk_package} : Fail"
-#		let err=err+1
-    else
-        echo "${apk_package} : Pass"
-	fi
+	#if [ ${ret_value} -ne 0 ]; then
+        #echo "${apk_package} : Fail"
+##		let err=err+1
+    #else
+        #echo "${apk_package} : Pass"
+	#fi
     cleanup
 
 #	if [ ${ret_value} -ne 0 ]; then

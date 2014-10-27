@@ -2,7 +2,7 @@
 
 #need to be defined for different benchmark apks
 activity="com.glbenchmark.glbenchmark27/net.kishonti.gfxbench.GfxMainActivity"
-apk_file_name="com.glbenchmark.glbenchmark-3D-benchmark.apk"
+apk_file_name="com.glbenchmark.glbenchmark27.apk"
 test_method="python vc_GFXBench3.py"
 apk_package="com.glbenchmark.glbenchmark27"
 

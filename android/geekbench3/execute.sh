@@ -2,7 +2,7 @@
 
 # need to be defined for different benchmark apks
 activity="com.primatelabs.geekbench/.HomeActivity"
-apk_file_name="com.primatelabs.geekbench.apk"
+apk_file_name="Geekbench_3_v3.1.4.apk"
 
 # The first added parameter has been reserved by Android View Client.
 # In order to add customised parameter, the first one must be the serial number from ADB

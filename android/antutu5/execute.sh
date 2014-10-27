@@ -2,7 +2,7 @@
 
 #need to be defined for different benchmark apks
 activity="com.antutu.ABenchMark/.ABenchMarkStart"
-apk_file_name="antutu-benchmark-v5-alpha.apk"
+apk_file_name="com.antutu.ABenchMark-5.1.5.apk"
 test_method="python vc_antutu5.py"
 apk_package="com.antutu.ABenchMark"
 
