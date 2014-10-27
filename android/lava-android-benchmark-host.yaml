@@ -16,7 +16,7 @@ install:
         - http://git.nexell.co.kr:8081/nexell/infrastructure/nexell-lava-testsuite
         - http://git.nexell.co.kr:8081/nexell/infrastructure/AndroidViewClient
     steps:
-        - cd AndroidViewClient/AndroidViewClient
+        - cd AndroidViewClient
         - python setup.py install
     deps:
         - python-imaging
