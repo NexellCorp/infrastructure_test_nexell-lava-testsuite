@@ -147,7 +147,7 @@ function export_parent_dir(){
 
 function export_apks_dir(){
 #    export APKS_DIR="${parent_dir}/../benchmark-apks"
-    export APKS_DIR="${parent_dir}"
+    export APKS_DIR="${parent_dir}/../apks"
     echo 'APKS_DIR :' "${APKS_DIR}"
 }
 
@@ -180,7 +180,8 @@ function get_file_with_base_url(){
             exit 1
         fi
     elif [[ "${base_url}" =~ "http://" ]]; then
-        mkdir -p "${APKS_DIR}"
+        #mkdir -p "${APKS_DIR}"
+        rm -rf "${APKS_DIR}"
         git clone "${base_url}" "${APKS_DIR}"
         #wget "${base_url}"/${file_name} -O "${APKS_DIR}"/${file_name}
         if [ $? -ne 0 ]; then
