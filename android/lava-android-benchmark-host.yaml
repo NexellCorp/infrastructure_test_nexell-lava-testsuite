@@ -28,4 +28,5 @@ params:
 
 run:
     steps:
-        - bash android/$TEST_NAME/execute.sh
+        - cd android/$TEST_NAME
+        - bash execute.sh
