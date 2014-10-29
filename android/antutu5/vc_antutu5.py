@@ -61,6 +61,8 @@ detail_button = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/detail_btn")
 detail_button.touch()
 print("detail_btn")
 
+# psw0523 add for portrait mode
+call(['adb', 'shell', 'settings', 'put', 'system', 'user_rotation', '1'])
 #Get the score
 vc.dump(window='-1')
 multitask_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/ue_multitask_text")
