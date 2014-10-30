@@ -62,22 +62,28 @@ detail_button.touch()
 print("detail_btn")
 
 # psw0523 add for portrait mode
-call(['adb', 'shell', 'settings', 'put', 'system', 'user_rotation', '1'])
-#Get the score
-vc.dump(window='-1')
-multitask_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/ue_multitask_text")
-runtime_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/ue_dalvik_text")
-ram_operation_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/mem_text")
-ram_speed_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/ram_text")
-cpu_clock = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/cpu_attr_text")
-cpu_multi_integer_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/cpu_int_text")
-cpu_multi_float_point_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/cpu_float_text")
-cpu_single_integer_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/cpu_int_text2")
-cpu_single_float_point_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/cpu_float_text2")
-twod_graphics_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/gpu_2d_text")
-threed_graphics_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/gpu_3d_text")
-storage_io_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/io_sdw_text")
-database_io_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/io_db_text")
+get_results_done = False
+while get_results_done == False:
+try:
+    call(['adb', 'shell', 'settings', 'put', 'system', 'user_rotation', '1'])
+    #Get the score
+    vc.dump(window='-1')
+    multitask_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/ue_multitask_text")
+    runtime_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/ue_dalvik_text")
+    ram_operation_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/mem_text")
+    ram_speed_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/ram_text")
+    cpu_clock = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/cpu_attr_text")
+    cpu_multi_integer_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/cpu_int_text")
+    cpu_multi_float_point_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/cpu_float_text")
+    cpu_single_integer_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/cpu_int_text2")
+    cpu_single_float_point_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/cpu_float_text2")
+    twod_graphics_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/gpu_2d_text")
+    threed_graphics_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/gpu_3d_text")
+    storage_io_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/io_sdw_text")
+    database_io_score = vc.findViewByIdOrRaise("com.antutu.ABenchMark:id/io_db_text")
+    get_results_done = True
+except:
+    pass
 
 # psw0523 debugging
 print(['lava-test-case', '"AnTuTu 5.0 Alpha UX Multitask Score"', '--result', 'pass', '--measurement', multitask_score.getText()])
