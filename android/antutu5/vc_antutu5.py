@@ -109,7 +109,7 @@ call(['lava-test-case', 'AnTuTu 5.0 Alpha Multi Core CPU Float-Point Score', '--
 call(['lava-test-case', 'AnTuTu 5.0 Alpha Single Thread CPU Integer Score', '--result', 'pass', '--measurement', cpu_single_integer_score.getText()])
 call(['lava-test-case', 'AnTuTu 5.0 Alpha Single Thread CPU Float-Point Score', '--result', 'pass', '--measurement', cpu_single_float_point_score.getText()])
 call(['lava-test-case', 'AnTuTu 5.0 Alpha GPU 2D Graphics Score', '--result', 'pass', '--measurement', twod_graphics_score.getText()])
-call(['lava-test-case', 'AnTuTu 5.0 Alpha GPU 3D Graphics Score', '--result', 'pass', '--measurement', threed_graphics_score.getText()])
+call(['lava-test-case', 'AnTuTu 5.0 Alpha GPU 3D Graphics Score', '--result', 'pass', '--measurement', threed_graphics_score.getText().split()[1]])
 call(['lava-test-case', 'AnTuTu 5.0 Alpha IO Storage IO Score', '--result', 'pass', '--measurement', storage_io_score.getText()])
 call(['lava-test-case', 'AnTuTu 5.0 Alpha IO Database IO Score', '--result', 'pass', '--measurement', database_io_score.getText()])
 
